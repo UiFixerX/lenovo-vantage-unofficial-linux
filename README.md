@@ -10,7 +10,7 @@
 
 **Lenovo Legion Toolkit (Linux Edition)** is a production-grade unofficial alternative to Lenovo Vantage / Legion Toolkit for GNU/Linux. It brings deep hardware integration to your system, providing you with real-time telemetry, power management, thermal controls, and battery conservation tools directly from a modern GUI. 
 
-Designed natively for Linux, it operates independently of standard OS interfaces by communicating directly with the EC (Embedded Controller) via ACPI/sysfs through a secure, split-privilege D-Bus daemon. 
+Designed natively for Linux, it operates independently of standard OS interfaces by communicating directly with the EC (Embedded Controller) via ACPI/sysfs through a secure, split-privilege D-Bus service.
 
 Whether you run **Wayland** or **X11**, or use **GNOME, KDE Plasma, Cinnamon, or i3**, the toolkit scales natively across high-DPI displays.
 
@@ -31,8 +31,8 @@ Whether you run **Wayland** or **X11**, or use **GNOME, KDE Plasma, Cinnamon, or
 ## Architecture
 
 The project employs a secure split-privilege architecture:
-1. `vantaged` (**System Daemon**): Runs as root in the background. Safely executes privileged ACPI, `/sys/class`, and `supergfxctl` hardware calls.
-2. `vantage-gui` (**User GUI**): Runs as your standard unprivileged user. A pristine PyQt6 interface that communicates with the daemon exclusively via standard `D-Bus` IPC.
+1. `vantageservice` (**System Service**): Runs as root in the background. Safely executes privileged ACPI, `/sys/class`, and `supergfxctl` hardware calls.
+2. `vantage-gui` (**User GUI**): Runs as your standard unprivileged user. A pristine PyQt6 interface that communicates with the service exclusively via standard `D-Bus` IPC.
 
 ---
 
@@ -68,11 +68,11 @@ sudo pacman -S python python-dbus python-pyqt6 supergfxctl
    cd lenovo-vantage-unofficial-linux
    ```
 
-2. **Install globally via Makefile:**
+2. **Install globally:**
    ```bash
    sudo make install
    ```
-   *This automatically registers the `lenovo-vantage.service` systemd daemon, enables it, and creates the desktop entries.*
+   *This automatically copies all files to `/usr/lib/vantage/`, registers the `vantageservice.service` systemd service, installs the D-Bus policy, reloads systemd and D-Bus, and creates the desktop entries. The installer is universal and works on any Linux distribution.*
 
 3. **Launch the Application:**
    * Open your application launcher (Super/Windows key) and search for **"Lenovo Vantage"**.
@@ -87,7 +87,7 @@ sudo pacman -S python python-dbus python-pyqt6 supergfxctl
 
 ## Uninstallation
 
-To completely remove the daemon, application, and clear out `/etc/lenovo-vantage` configuration configs:
+To completely remove the service, application, and clear out `/etc/lenovo-vantage` configuration:
 
 ```bash
 cd lenovo-vantage-unofficial-linux

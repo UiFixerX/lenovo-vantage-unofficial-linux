@@ -651,7 +651,7 @@ def get_laptop_model():
         except: pass
         return name
     except:
-        return "Unknown Lenovo Device"
+        return tr("Device subtitle fallback")
 
 class VantageService:
     def __init__(self):
@@ -759,7 +759,7 @@ class VantageGUI(QMainWindow):
         self.btn_group.setExclusive(True)
         
         # "Donate" removed from UI entirely as requested
-        tabs = ["Dashboard", "Power", "Battery", "Actions", "Settings", "About"]
+        tabs = [tr("Dashboard"), tr("Power"), tr("Battery"), tr("Actions"), tr("Settings"), tr("About")]
         for idx, t in enumerate(tabs):
             if t == "About":
                 side_layout.addStretch()
@@ -925,7 +925,7 @@ class VantageGUI(QMainWindow):
     # --- TABS ---
 
     def create_dashboard_page(self):
-        page, layout = self._create_scroll_page("Dashboard")
+        page, layout = self._create_scroll_page(tr("Dashboard"))
         
         lbl_model = QLabel(get_laptop_model())
         lbl_model.setObjectName("DeviceSubtitle")
@@ -943,11 +943,11 @@ class VantageGUI(QMainWindow):
         cpu_l = QGridLayout(cpu_w)
         cpu_l.setContentsMargins(0, 0, 0, 0)
         cpu_l.setVerticalSpacing(18)
-        cpu_title = QLabel("CPU")
+        cpu_title = QLabel(tr("CPU"))
         cpu_title.setObjectName("MonitorTitle")
         cpu_l.addWidget(cpu_title, 0, 0, 1, 3)
         
-        cpu_lbl_util = QLabel("Utilization")
+        cpu_lbl_util = QLabel(tr("Utilization"))
         cpu_lbl_util.setObjectName("MonitorLabel")
         cpu_l.addWidget(cpu_lbl_util, 1, 0)
         self.pb_cpu = QProgressBar()
@@ -958,7 +958,7 @@ class VantageGUI(QMainWindow):
         self.lbl_cpu_util.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
         cpu_l.addWidget(self.lbl_cpu_util, 1, 2)
         
-        cpu_lbl_temp = QLabel("Temperature")
+        cpu_lbl_temp = QLabel(tr("Temperature"))
         cpu_lbl_temp.setObjectName("MonitorLabel")
         cpu_l.addWidget(cpu_lbl_temp, 2, 0)
         self.pb_cput = QProgressBar()
@@ -969,7 +969,7 @@ class VantageGUI(QMainWindow):
         self.lbl_cpu_temp.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
         cpu_l.addWidget(self.lbl_cpu_temp, 2, 2)
         
-        cpu_lbl_fan = QLabel("Fan")
+        cpu_lbl_fan = QLabel(tr("Fan"))
         cpu_lbl_fan.setObjectName("MonitorLabel")
         cpu_l.addWidget(cpu_lbl_fan, 3, 0)
         self.pb_cpuf = QProgressBar()
@@ -987,11 +987,11 @@ class VantageGUI(QMainWindow):
         gpu_l = QGridLayout(gpu_w)
         gpu_l.setContentsMargins(0, 0, 0, 0)
         gpu_l.setVerticalSpacing(18)
-        gpu_title = QLabel("GPU")
+        gpu_title = QLabel(tr("GPU"))
         gpu_title.setObjectName("MonitorTitle")
         gpu_l.addWidget(gpu_title, 0, 0, 1, 3)
         
-        gpu_lbl_util = QLabel("Utilization")
+        gpu_lbl_util = QLabel(tr("Utilization"))
         gpu_lbl_util.setObjectName("MonitorLabel")
         gpu_l.addWidget(gpu_lbl_util, 1, 0)
         self.pb_gpu = QProgressBar()
@@ -1002,7 +1002,7 @@ class VantageGUI(QMainWindow):
         self.lbl_gpu_util.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
         gpu_l.addWidget(self.lbl_gpu_util, 1, 2)
         
-        gpu_lbl_temp = QLabel("Temperature")
+        gpu_lbl_temp = QLabel(tr("Temperature"))
         gpu_lbl_temp.setObjectName("MonitorLabel")
         gpu_l.addWidget(gpu_lbl_temp, 2, 0)
         self.pb_gput = QProgressBar()
@@ -1013,7 +1013,7 @@ class VantageGUI(QMainWindow):
         self.lbl_gpu_temp.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
         gpu_l.addWidget(self.lbl_gpu_temp, 2, 2)
         
-        gpu_lbl_fan = QLabel("Fan")
+        gpu_lbl_fan = QLabel(tr("Fan"))
         gpu_lbl_fan.setObjectName("MonitorLabel")
         gpu_l.addWidget(gpu_lbl_fan, 3, 0)
         self.pb_gpuf = QProgressBar()
@@ -1028,7 +1028,7 @@ class VantageGUI(QMainWindow):
         layout.addWidget(dash_group)
         
         # Quick Controls
-        lbl_qc = QLabel("Quick Controls")
+        lbl_qc = QLabel(tr("Quick Controls"))
         lbl_qc.setObjectName("SectionTitle")
         layout.addWidget(lbl_qc)
         
@@ -1036,30 +1036,30 @@ class VantageGUI(QMainWindow):
         pm.addItems(["Quiet", "Balance", "Performance"])
         self.pm_combos.append(pm)
         pm.currentIndexChanged.connect(self.auto_apply_change)
-        self.rows['power_dash'] = self._create_row("Power Mode", "Performance profile for CPU & GPU.", pm)
+        self.rows['power_dash'] = self._create_row(tr("Power Mode"), tr("Power Mode subtitle"), pm)
         layout.addWidget(self.rows['power_dash'])
         
         gm = QComboBox()
         gm.addItems(["Hybrid", "Integrated", "Dedicated"])
         self.gpu_combos.append(gm)
         gm.currentIndexChanged.connect(self.auto_apply_change)
-        self.rows['gpu_dash'] = self._create_row("GPU Working Mode", "Select GPU mode (requires restart).", gm)
+        self.rows['gpu_dash'] = self._create_row(tr("GPU Working Mode"), tr("GPU Working Mode subtitle"), gm)
         layout.addWidget(self.rows['gpu_dash'])
         
         fm = QComboBox()
         fm.addItems(["Standard", "Super Silent", "Dust Cleaning", "Performance"])
         self.fan_combos.append(fm)
         fm.currentIndexChanged.connect(self.auto_apply_change)
-        self.rows['fan_dash'] = self._create_row("Active Cooling Policy", "Set EC fan curve behavior.", fm)
+        self.rows['fan_dash'] = self._create_row(tr("Active Cooling Policy"), tr("Active Cooling Policy subtitle"), fm)
         layout.addWidget(self.rows['fan_dash'])
         
         layout.addStretch()
         return page
 
     def create_power_page(self):
-        page, layout = self._create_scroll_page("Power & System")
+        page, layout = self._create_scroll_page(tr("Power & System"))
         
-        lbl_pwr = QLabel("Power")
+        lbl_pwr = QLabel(tr("Power"))
         lbl_pwr.setObjectName("SectionTitle")
         layout.addWidget(lbl_pwr)
         
@@ -1067,32 +1067,32 @@ class VantageGUI(QMainWindow):
         pm.addItems(["Quiet", "Balance", "Performance"])
         self.pm_combos.append(pm)
         pm.currentIndexChanged.connect(self.auto_apply_change)
-        self.rows['power_main'] = self._create_row("Power Mode", "Performance profile (also Fn+Q).", pm)
+        self.rows['power_main'] = self._create_row(tr("Power Mode"), tr("Power Mode power subtitle"), pm)
         layout.addWidget(self.rows['power_main'])
         
         usb = QComboBox()
         usb.addItems(["Off", "On"])
         self.usb_combos.append(usb)
         usb.currentIndexChanged.connect(self.auto_apply_change)
-        self.rows['usb'] = self._create_row("Always on USB", "Charge USB when laptop is off.", usb)
+        self.rows['usb'] = self._create_row(tr("Always on USB"), tr("Always on USB subtitle"), usb)
         layout.addWidget(self.rows['usb'])
 
         ib = QComboBox()
         ib.addItems(["Off", "On"])
         self.ib_combos.append(ib)
         ib.currentIndexChanged.connect(self.auto_apply_change)
-        self.rows['ib'] = self._create_row("Instant Boot", "Power on when charger connects.", ib)
+        self.rows['ib'] = self._create_row(tr("Instant Boot"), tr("Instant Boot subtitle"), ib)
         layout.addWidget(self.rows['ib'])
         
         fs = QComboBox()
         fs.addItems(["Off", "On"])
         self.fs_combos.append(fs)
         fs.currentIndexChanged.connect(self.auto_apply_change)
-        self.rows['fs'] = self._create_row("Flip To Start", "Power on when lid is opened.", fs)
+        self.rows['fs'] = self._create_row(tr("Flip To Start"), tr("Flip To Start subtitle"), fs)
         layout.addWidget(self.rows['fs'])
         
         # GPU Section
-        lbl_gpu = QLabel("GPU")
+        lbl_gpu = QLabel(tr("GPU"))
         lbl_gpu.setObjectName("SectionTitle")
         layout.addWidget(lbl_gpu)
         
@@ -1100,23 +1100,23 @@ class VantageGUI(QMainWindow):
         gm.addItems(["Hybrid", "Integrated", "Dedicated"])
         self.gpu_combos.append(gm)
         gm.currentIndexChanged.connect(self.auto_apply_change)
-        self.rows['gpu_main'] = self._create_row("GPU Working Mode", "Select GPU mode (requires restart).", gm, "Uses supergfxctl to set GPU mode.")
+        self.rows['gpu_main'] = self._create_row(tr("GPU Working Mode"), tr("GPU Working Mode subtitle"), gm, tr("GPU Working Mode subtitle"))
         layout.addWidget(self.rows['gpu_main'])
         
         dt = QComboBox()
         dt.addItems(["Disabled"])
-        dt_row = self._create_row("Discrete GPU Toggle", "Unsupported on this architecture.", dt)
+        dt_row = self._create_row(tr("Discrete GPU Toggle"), tr("Discrete GPU Toggle subtitle"), dt)
         self._set_row_state(dt_row, False)
         layout.addWidget(dt_row)
         
         oc = QComboBox()
         oc.addItems(["Disabled"])
-        oc_row = self._create_row("GPU Overclock", "Missing NVIDIA Coolbits support.", oc)
+        oc_row = self._create_row(tr("GPU Overclock"), tr("GPU Overclock subtitle"), oc)
         self._set_row_state(oc_row, False)
         layout.addWidget(oc_row)
         
         # Thermal / Fan
-        lbl_fan = QLabel("Thermal / Fan Control")
+        lbl_fan = QLabel(tr("Thermal / Fan Control"))
         lbl_fan.setObjectName("SectionTitle")
         layout.addWidget(lbl_fan)
 
@@ -1124,7 +1124,7 @@ class VantageGUI(QMainWindow):
         fm.addItems(["Standard", "Super Silent", "Dust Cleaning", "Performance"])
         self.fan_combos.append(fm)
         fm.currentIndexChanged.connect(self.auto_apply_change)
-        self.rows['fan_main'] = self._create_row("Active Cooling Policy", "Set EC fan curve behavior.", fm)
+        self.rows['fan_main'] = self._create_row(tr("Active Cooling Policy"), tr("Active Cooling Policy subtitle"), fm)
         layout.addWidget(self.rows['fan_main'])
 
         # ── Custom TDP (RyzenAdj) ─────────────────────────────────────────────
@@ -1139,18 +1139,18 @@ class VantageGUI(QMainWindow):
         tdp_header = QHBoxLayout()
         tdp_title_v = QVBoxLayout()
         tdp_title_v.setSpacing(2)
-        lbl_tdp_title = QLabel("Custom TDP (RyzenAdj)")
+        lbl_tdp_title = QLabel(tr("Custom TDP (RyzenAdj)"))
         lbl_tdp_title.setObjectName("RowTitle")
 
         tdp_title_v.addWidget(lbl_tdp_title)
-        lbl_tdp_sub = QLabel("Override hardware power limits in mW.")
+        lbl_tdp_sub = QLabel(tr("Custom TDP subtitle"))
         lbl_tdp_sub.setObjectName("RowSubtitle")
 
         tdp_title_v.addWidget(lbl_tdp_sub)
         tdp_header.addLayout(tdp_title_v)
         tdp_header.addStretch()
 
-        self.tdp_check = QCheckBox("Enable Override")
+        self.tdp_check = QCheckBox(tr("Enable Override"))
         self.tdp_check.setChecked(False)
         self.tdp_check.toggled.connect(self._on_tdp_toggle)
         tdp_header.addWidget(self.tdp_check)
@@ -1186,7 +1186,7 @@ class VantageGUI(QMainWindow):
         tdp_grid.addLayout(_make_spin("Slow Limit"))
         tdp_grid.addStretch()
 
-        self.btn_apply_tdp = QPushButton("Apply TDP")
+        self.btn_apply_tdp = QPushButton(tr("Apply TDP"))
         self.btn_apply_tdp.setObjectName("ApplyBtn")
         self.btn_apply_tdp.setEnabled(False)
         self.btn_apply_tdp.clicked.connect(self.apply_tdp)
@@ -1203,7 +1203,7 @@ class VantageGUI(QMainWindow):
         dr = QComboBox()
         dr.addItems(["Native"])
         dr.setEnabled(False)
-        dr_row = self._create_row("Resolution", "Managed by OS.", dr)
+        dr_row = self._create_row(tr("Resolution"), tr("Resolution subtitle"), dr)
         self._set_row_state(dr_row, False)
         dr_row.setVisible(False)
         layout.addWidget(dr_row)
@@ -1211,7 +1211,7 @@ class VantageGUI(QMainWindow):
         ds = QComboBox()
         ds.addItems(["Native"])
         ds.setEnabled(False)
-        ds_row = self._create_row("Scaling (DPI)", "Managed by OS.", ds)
+        ds_row = self._create_row(tr("Scaling (DPI)"), tr("Scaling (DPI) subtitle"), ds)
         self._set_row_state(ds_row, False)
         ds_row.setVisible(False)
         layout.addWidget(ds_row)
@@ -1224,7 +1224,7 @@ class VantageGUI(QMainWindow):
         kb = QComboBox()
         kb.addItems(["Off"])
         kb.setEnabled(False)
-        kb_row = self._create_row("Keyboard Backlight", "OpenRGB missing or unsupported.", kb)
+        kb_row = self._create_row(tr("Keyboard Backlight"), tr("Keyboard Backlight subtitle"), kb)
         self._set_row_state(kb_row, False)
         kb_row.setVisible(False)
         layout.addWidget(kb_row)
@@ -1232,7 +1232,7 @@ class VantageGUI(QMainWindow):
         tt = QComboBox()
         tt.addItems(["On"])
         tt.setEnabled(False)
-        tt_row = self._create_row("Touchpad Toggle", "Managed by OS desktop environment.", tt)
+        tt_row = self._create_row(tr("Touchpad Toggle"), tr("Touchpad Toggle subtitle"), tt)
         self._set_row_state(tt_row, False)
         tt_row.setVisible(False)
         layout.addWidget(tt_row)
@@ -1241,13 +1241,13 @@ class VantageGUI(QMainWindow):
         fn.addItems(["Off", "On"])
         self.fn_combos.append(fn)
         fn.currentIndexChanged.connect(self.auto_apply_change)
-        self.rows['fn'] = self._create_row("Fn Lock", "Toggle media keys vs F1-F12.", fn)
+        self.rows['fn'] = self._create_row(tr("Fn Lock"), tr("Fn Lock subtitle"), fn)
         layout.addWidget(self.rows['fn'])
 
         wk = QComboBox()
         wk.addItems(["Off"])
         wk.setEnabled(False)
-        wk_row = self._create_row("Windows Key Lock", "Hardware mapping not found.", wk)
+        wk_row = self._create_row(tr("Windows Key Lock"), tr("Windows Key Lock subtitle"), wk)
         self._set_row_state(wk_row, False)
         wk_row.setVisible(False)
         layout.addWidget(wk_row)
@@ -1256,9 +1256,9 @@ class VantageGUI(QMainWindow):
         return page
 
     def create_battery_page(self):
-        page, layout = self._create_scroll_page("Battery Details")
+        page, layout = self._create_scroll_page(tr("Battery Details"))
         
-        lbl_mode = QLabel("Battery Mode")
+        lbl_mode = QLabel(tr("Battery Mode"))
         lbl_mode.setObjectName("SectionTitle")
         layout.addWidget(lbl_mode)
         
@@ -1266,10 +1266,10 @@ class VantageGUI(QMainWindow):
         bat.addItems(["Normal", "Conservation"])
         self.bat_combos.append(bat)
         bat.currentIndexChanged.connect(self.auto_apply_change)
-        self.rows['battery'] = self._create_row("Battery Conservation Mode", "Limits charge to 60-80% to extend battery lifespan.", bat)
+        self.rows['battery'] = self._create_row(tr("Conservation Mode"), tr("Conservation Mode subtitle"), bat)
         layout.addWidget(self.rows['battery'])
         
-        lbl_stats = QLabel("Statistics")
+        lbl_stats = QLabel(tr("Statistics"))
         lbl_stats.setObjectName("SectionTitle")
         layout.addWidget(lbl_stats)
         
@@ -1279,13 +1279,13 @@ class VantageGUI(QMainWindow):
         
         self.bat_labels = {}
         fields = [
-            ("Battery %", "percent"),
-            ("Charging state", "status"),
-            ("Current capacity", "current"),
-            ("Full capacity", "full"),
-            ("Design capacity", "design"),
-            ("Health %", "health"),
-            ("Cycle count", "cycles")
+            (tr("Battery %"), "percent"),
+            (tr("Charging state"), "status"),
+            (tr("Current capacity"), "current"),
+            (tr("Full capacity"), "full"),
+            (tr("Design capacity"), "design"),
+            (tr("Health %"), "health"),
+            (tr("Cycle count"), "cycles")
         ]
         
         for i, (label, key) in enumerate(fields):
@@ -1313,28 +1313,28 @@ class VantageGUI(QMainWindow):
         return page
 
     def create_actions_page(self):
-        page, layout = self._create_scroll_page("Actions & Automation")
+        page, layout = self._create_scroll_page(tr("Actions & Automation"))
         
-        lbl_info = QLabel("Event-driven automation engine for hardware profiles.\nAutomation rules are planned for a future release. Stay tuned.")
+        lbl_info = QLabel(tr("Actions info"))
         lbl_info.setStyleSheet("color: #aaaaaa; margin-bottom: 10px;")
         layout.addWidget(lbl_info)
         
         mt = QComboBox()
         mt.addItems(["Disabled"])
         mt.setEnabled(False)
-        mt_row = self._create_row("Master Toggle", "Automation rules not yet implemented.", mt)
+        mt_row = self._create_row(tr("Master Toggle"), tr("Master Toggle subtitle"), mt)
         mt_row.setEnabled(False)
         self._set_row_state(mt_row, False)
         layout.addWidget(mt_row)
         
-        lbl_trig = QLabel("Triggers & Actions")
+        lbl_trig = QLabel(tr("Triggers & Actions"))
         lbl_trig.setObjectName("SectionTitle")
         layout.addWidget(lbl_trig)
         
         tr = QComboBox()
         tr.addItems(["AC Connected", "AC Disconnected"])
         tr.setEnabled(False)
-        tr_row = self._create_row("Available Triggers", "Select trigger conditions.", tr)
+        tr_row = self._create_row(tr("Available Triggers"), tr("Available Triggers subtitle"), tr)
         tr_row.setEnabled(False)
         self._set_row_state(tr_row, False)
         layout.addWidget(tr_row)
@@ -1342,7 +1342,7 @@ class VantageGUI(QMainWindow):
         ac = QComboBox()
         ac.addItems(["Set Power Mode", "Set GPU Mode"])
         ac.setEnabled(False)
-        ac_row = self._create_row("Mapped Actions", "Define behavior upon trigger.", ac)
+        ac_row = self._create_row(tr("Mapped Actions"), tr("Mapped Actions subtitle"), ac)
         ac_row.setEnabled(False)
         self._set_row_state(ac_row, False)
         layout.addWidget(ac_row)
@@ -1351,51 +1351,87 @@ class VantageGUI(QMainWindow):
         return page
 
     def create_settings_page(self):
-        page, layout = self._create_scroll_page("Settings")
-        
-        lbl_gen = QLabel("General")
+        page, layout = self._create_scroll_page(tr("Settings"))
+
+        lbl_gen = QLabel(tr("General"))
         lbl_gen.setObjectName("SectionTitle")
         layout.addWidget(lbl_gen)
-        
+
+        # ── Language selector (functional) ──────────────────────────
         lang = QComboBox()
-        lang.addItems(["System Default", "English"])
-        lang.setEnabled(False)
-        lang_row = self._create_row("Language", "Not yet implemented.", lang)
-        self._set_row_state(lang_row, False)
+        lang.addItems([tr("System Default"), tr("English"), tr("Russian")])
+        current_lang = get_locale()
+        if current_lang == "ru":
+            lang.setCurrentIndex(2)
+        elif current_lang == "en":
+            lang.setCurrentIndex(1)
+        else:
+            lang.setCurrentIndex(0)
+        lang.currentIndexChanged.connect(self._on_language_changed)
+        lang_row = self._create_row(tr("Language"), tr("Language subtitle"), lang)
         layout.addWidget(lang_row)
-        
+
+        # ── Theme selector (functional) ─────────────────────────────
         theme = QComboBox()
-        theme.addItems(["Dark", "Light", "System"])
-        theme.setEnabled(False)
-        theme_row = self._create_row("Theme", "Not yet implemented.", theme)
-        self._set_row_state(theme_row, False)
+        theme.addItems([tr("Dark Theme"), tr("Light Theme"), tr("System Default")])
+        if self.current_theme == "light":
+            theme.setCurrentIndex(1)
+        else:
+            theme.setCurrentIndex(0)
+        theme.currentIndexChanged.connect(self._on_theme_changed)
+        theme_row = self._create_row(tr("Theme"), tr("Theme subtitle"), theme)
         layout.addWidget(theme_row)
-        
-        lbl_beh = QLabel("Behavior")
+
+        lbl_beh = QLabel(tr("Behavior"))
         lbl_beh.setObjectName("SectionTitle")
         layout.addWidget(lbl_beh)
-        
+
         autorun = QComboBox()
         autorun.addItems(["Off"])
         autorun.setEnabled(False)
-        autorun_row = self._create_row("Autorun", "Start with system.", autorun)
+        autorun_row = self._create_row(tr("Autorun"), tr("Autorun subtitle"), autorun)
         autorun_row.setEnabled(False)
         self._set_row_state(autorun_row, False)
         layout.addWidget(autorun_row)
-        
+
         bl = QComboBox()
         bl.addItems(["Disabled"])
         bl.setEnabled(False)
-        bl_row = self._create_row("Boot Logo", "UEFI boot logo. Not implemented.", bl, "Missing firmware map.")
+        bl_row = self._create_row(tr("Boot Logo"), tr("Boot Logo subtitle"), bl, tr("Boot Logo subtitle"))
         bl_row.setEnabled(False)
         self._set_row_state(bl_row, False)
         layout.addWidget(bl_row)
-        
+
         layout.addStretch()
         return page
 
+    def _on_language_changed(self, index):
+        if index == 1:
+            save_locale("en")
+            set_locale("en")
+        elif index == 2:
+            save_locale("ru")
+            set_locale("ru")
+        else:
+            save_locale("en")
+            set_locale("en")
+        QMessageBox.information(self, tr("Language"), tr("Language subtitle"))
+        from PyQt6.QtCore import QCoreApplication
+        QCoreApplication.quit()
+        import subprocess, sys
+        subprocess.Popen([sys.executable] + sys.argv)
+        sys.exit(0)
+
+    def _on_theme_changed(self, index):
+        if index == 1:
+            self.current_theme = "light"
+        else:
+            self.current_theme = "dark"
+        self._apply_theme(self.current_theme)
+        save_theme(self.current_theme)
+
     def create_about_page(self):
-        page, layout = self._create_scroll_page("About")
+        page, layout = self._create_scroll_page(tr("About"))
         
         frame = QFrame()
         frame.setObjectName("SettingsRow")
@@ -1403,15 +1439,15 @@ class VantageGUI(QMainWindow):
         v.setContentsMargins(30, 30, 30, 30)
         v.setSpacing(10)
         
-        title = QLabel("Lenovo Vantage Linux Unofficial")
+        title = QLabel(tr("About app title"))
         title.setStyleSheet("font-size: 20px; font-weight: bold; color: white;")
         v.addWidget(title)
         
-        v.addWidget(QLabel("A robust, native hardware control suite built for Lenovo laptops running on Linux."))
+        v.addWidget(QLabel(tr("About app desc")))
         v.addSpacing(15)
-        v.addWidget(QLabel("<b>Version:</b> 1.0.0-initial-release"))
-        v.addWidget(QLabel("<b>Backend:</b> D-Bus System Service"))
-        v.addWidget(QLabel("<b>Dependencies:</b> supergfxctl, ryzenadj, power-profiles-daemon"))
+        v.addWidget(QLabel(f"<b>{tr('Version')}:</b> 1.0.0-initial-release"))
+        v.addWidget(QLabel(f"<b>{tr('Backend')}:</b> D-Bus System Service"))
+        v.addWidget(QLabel(f"<b>{tr('Dependencies')}:</b> supergfxctl, ryzenadj, power-profiles-daemon"))
         
         lbl_github = QLabel('<b>GitHub:</b> <a href="https://github.com/nightcodex7/lenovo-vantage-unofficial-linux" style="color: #0078d4; text-decoration: none;">nightcodex7/vantage</a>')
         lbl_github.setOpenExternalLinks(True)
@@ -1511,7 +1547,7 @@ class VantageGUI(QMainWindow):
         if not sender or not sender.isEnabled():
             return
 
-        self.statusBar().showMessage("Syncing...", 1000)
+        self.statusBar().showMessage(tr("Status syncing"), 1000)
         errors = []
         try:
             if sender in self.pm_combos:
@@ -1537,9 +1573,9 @@ class VantageGUI(QMainWindow):
             self._mark_pending()  # show bar so user can retry
 
         if errors:
-            QMessageBox.warning(self, "Change Failed", "\n".join(errors))
+            QMessageBox.warning(self, tr("Change Failed"), "\n".join(errors))
         else:
-            self.statusBar().showMessage("✓ Settings applied to hardware.", 2000)
+            self.statusBar().showMessage(tr("Status applied"), 2000)
             self._clear_pending()
 
         self.load_state()
@@ -1552,10 +1588,10 @@ class VantageGUI(QMainWindow):
                 self.tdp_spins[1].value(),
                 self.tdp_spins[2].value()
             )
-            self.statusBar().showMessage("✓ TDP limits applied.", 2000)
+            self.statusBar().showMessage(tr("Status tdp applied"), 2000)
             self._clear_pending()
         except Exception as e:
-            QMessageBox.warning(self, "TDP Error", str(e))
+            QMessageBox.warning(self, tr("TDP Error"), str(e))
 
     def load_state(self):
         current = self.stack.currentWidget()
@@ -1705,12 +1741,28 @@ def main():
 
     app = QApplication(sys.argv)
     app.setWindowIcon(QIcon("/usr/share/icons/hicolor/scalable/apps/vantage.png"))
+
+    # ── First-run language selection ───────────────────────────────
+    if is_first_run():
+        # Detect system theme before creating the dialog so it looks native
+        detected = detect_system_theme()
+        save_theme(detected)
+        dlg = LanguageDialog()
+        if dlg.exec() == QDialog.DialogCode.Accepted and dlg.chosen():
+            save_locale(dlg.chosen())
+            set_locale(dlg.chosen())
+        else:
+            save_locale("en")
+            set_locale("en")
+    else:
+        set_locale(load_locale())
+
     try:
         svc = VantageService()
     except Exception as e:
         QMessageBox.critical(None, tr("Service Error"), str(e))
         sys.exit(1)
-        
+
     gui = VantageGUI(svc)
     gui.show()
     sys.exit(app.exec())
