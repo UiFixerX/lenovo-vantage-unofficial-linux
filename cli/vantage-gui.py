@@ -73,9 +73,10 @@ QFrame#SettingsRow {
     border-radius: 8px;
     min-height: 64px;
 }
+/* A1/A9: Disabled rows use a distinct but readable style — not too dim */
 QFrame#SettingsRow:disabled {
-    background-color: #161616;
-    border: 1px solid #252525;
+    background-color: #181818;
+    border: 1px solid #222222;
 }
 QFrame#SettingsRow QLabel#RowTitle {
     color: #ffffff;
@@ -88,11 +89,12 @@ QFrame#SettingsRow QLabel#RowSubtitle {
     font-size: 12px;
     background: transparent;
 }
+/* A1: Disabled title/subtitle stays readable — only slightly muted */
 QFrame#SettingsRow:disabled QLabel#RowTitle {
-    color: #5a5a5a;
+    color: #888888;
 }
 QFrame#SettingsRow:disabled QLabel#RowSubtitle {
-    color: #3e3e3e;
+    color: #666666;
 }
 
 /* A6: TDP field labels — styled via objectName, not inline stylesheet */
@@ -218,9 +220,11 @@ QProgressBar {
     text-align: right;
     color: transparent;
 }
+/* A3: Progress bar chunk always visible — min-width ensures 0% shows a sliver */
 QProgressBar::chunk {
     border-radius: 4px;
     background-color: #27ae60;
+    min-width: 2px;
 }
 QComboBox:disabled::drop-down {
     border-left: 1px solid #333333;
@@ -351,9 +355,10 @@ QFrame#SettingsRow {
     border-radius: 8px;
     min-height: 64px;
 }
+/* A1/A9: Disabled rows use a distinct but readable style — not too dim */
 QFrame#SettingsRow:disabled {
     background-color: #f0f0f0;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #d8d8d8;
 }
 QFrame#SettingsRow QLabel#RowTitle {
     color: #1a1a1a;
@@ -366,11 +371,12 @@ QFrame#SettingsRow QLabel#RowSubtitle {
     font-size: 12px;
     background: transparent;
 }
+/* A1: Disabled title/subtitle stays readable — only slightly muted */
 QFrame#SettingsRow:disabled QLabel#RowTitle {
-    color: #999999;
+    color: #777777;
 }
 QFrame#SettingsRow:disabled QLabel#RowSubtitle {
-    color: #bbbbbb;
+    color: #999999;
 }
 QLabel#TdpFieldLabel {
     color: #666666;
@@ -487,9 +493,11 @@ QProgressBar {
     text-align: right;
     color: transparent;
 }
+/* A3: Progress bar chunk always visible — min-width ensures 0% shows a sliver */
 QProgressBar::chunk {
     border-radius: 4px;
     background-color: #27ae60;
+    min-width: 2px;
 }
 QComboBox:disabled::drop-down {
     border-left: 1px solid #cccccc;
@@ -871,8 +879,10 @@ class VantageGUI(QMainWindow):
             lbl_sub.setObjectName("RowSubtitle")
             lbl_sub.setWordWrap(False)
             lbl_sub.setTextFormat(Qt.TextFormat.PlainText)
-            # A2/A5/A8: elide long subtitles instead of wrapping
-            lbl_sub.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+            # A2/A5/A8: prevent wrapping — fixed height, expanding width
+            lbl_sub.setFixedHeight(16)
+            lbl_sub.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+            lbl_sub.setMinimumWidth(0)
             text_v.addWidget(lbl_sub)
 
         h.addLayout(text_v)
