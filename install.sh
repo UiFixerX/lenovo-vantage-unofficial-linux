@@ -47,7 +47,7 @@ do_install() {
     check_python_deps
 
     echo "Copying program files to $INSTALL_DIR ..."
-    mkdir -p "$INSTALL_DIR/service/features" "$INSTALL_DIR/service/ipc" "$INSTALL_DIR/cli"
+    mkdir -p "$INSTALL_DIR/service/features" "$INSTALL_DIR/service/ipc" "$INSTALL_DIR/cli/gui/pages"
     cp -r service/* "$INSTALL_DIR/service/"
     cp -r cli/*   "$INSTALL_DIR/cli/"
     chmod +x "$INSTALL_DIR/service/vantageservice.py"

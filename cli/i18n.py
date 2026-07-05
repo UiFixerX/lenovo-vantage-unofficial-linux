@@ -128,7 +128,7 @@ _STRINGS_EN = {
     "Status tdp applied": "✓ TDP limits applied.",
 
     # ── Dialogs ────────────────────────────────────────────────────
-    "Service Error": "Service Error",
+    "Service Error": "Service not running. Start it with:\nsystemctl start vantageservice",
     "Change Failed": "Change Failed",
     "TDP Error": "TDP Error",
 
@@ -258,7 +258,7 @@ _STRINGS_RU = {
     "Status tdp applied": "✓ Лимиты TDP применены.",
 
     # ── Dialogs ────────────────────────────────────────────────────
-    "Service Error": "Ошибка службы",
+    "Service Error": "Служба не запущена. Запустите:\nsystemctl start vantageservice",
     "Change Failed": "Ошибка изменения",
     "TDP Error": "Ошибка TDP",
 

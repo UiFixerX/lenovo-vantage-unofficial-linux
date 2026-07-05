@@ -68,6 +68,8 @@ sudo pacman -S python python-dbus python-pyqt6 supergfxctl
    cd lenovo-vantage-unofficial-linux
    ```
 
+   *(Alternatively, download the source archive and extract it.)*
+
 2. **Install globally:**
    ```bash
    sudo make install
