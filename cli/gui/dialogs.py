@@ -22,7 +22,7 @@ class LanguageDialog(QDialog):
         layout.setContentsMargins(24, 24, 24, 24)
 
         label = QLabel(tr("Language dialog text"))
-        label.setStyleSheet("font-size: 15px; font-weight: 600;")
+        label.setObjectName("DialogLabel")
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(label)
 

@@ -67,18 +67,27 @@ class VantageGUI(QMainWindow):
         self.resize(1000, 750)
         self.setMinimumSize(900, 600)
 
-        # ── Theme ─────────────────────────────────────────────────────
         self.current_theme = load_theme()
         self.statusBar().showMessage(tr("Status ready"), 3000)
-
-        # If service is in limited mode, show a warning
         if svc.limited:
             self.statusBar().showMessage(tr("Service Error"), 0)
 
-        # ── System Tray (initialised early so pages can read tray_available) ──
         self._init_tray()
+        self._init_ui_tracking()
+        self._build_main_layout()
+        self._build_sidebar()
+        self._build_right_panel()
 
-        # ── UI tracking ───────────────────────────────────────────────
+        self.switch_tab(0)
+        self._apply_theme(self.current_theme)
+        self.load_state()
+
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_sensors)
+        self.timer.start(2000)
+        self.update_sensors()
+
+    def _init_ui_tracking(self):
         self.pm_combos = []
         self.gpu_combos = []
         self.fan_combos = []
@@ -92,7 +101,7 @@ class VantageGUI(QMainWindow):
         self._pending = False
         self.tdp_enabled = False
 
-        # ── Main layout ───────────────────────────────────────────────
+    def _build_main_layout(self):
         main_widget = QWidget()
         main_widget.setObjectName("MainWidget")
         main_layout = QHBoxLayout(main_widget)
@@ -100,7 +109,7 @@ class VantageGUI(QMainWindow):
         main_layout.setSpacing(0)
         self.setCentralWidget(main_widget)
 
-        # ── Sidebar ───────────────────────────────────────────────────
+    def _build_sidebar(self):
         self.sidebar = QWidget()
         self.sidebar.setObjectName("Sidebar")
         self.sidebar.setFixedWidth(220)
@@ -109,10 +118,7 @@ class VantageGUI(QMainWindow):
         side_layout.setSpacing(5)
 
         title_lbl = QLabel(" Vantage")
-        title_lbl.setStyleSheet(
-            "font-size: 18px; font-weight: bold; color: white; "
-            "margin-left: 15px; margin-bottom: 20px;"
-        )
+        title_lbl.setObjectName("SidebarTitle")
         side_layout.addWidget(title_lbl)
 
         self.nav_btns = []
@@ -144,16 +150,38 @@ class VantageGUI(QMainWindow):
                 lambda idx=i: self.switch_tab(idx)
             )
 
-        main_layout.addWidget(self.sidebar)
+        self.centralWidget().layout().addWidget(self.sidebar)
 
-        # ── Right panel ───────────────────────────────────────────────
+    def _build_right_panel(self):
         right_widget = QWidget()
         right_widget.setObjectName("MainWidget")
         right_layout = QVBoxLayout(right_widget)
         right_layout.setContentsMargins(0, 0, 0, 0)
         right_layout.setSpacing(0)
 
-        # Changes bar
+        self._build_changes_bar(right_layout)
+
+        self.theme_btn = QPushButton(tr("Light Theme"))
+        self.theme_btn.setObjectName("ThemeBtn")
+        self.theme_btn.setFixedHeight(36)
+        self.theme_btn.clicked.connect(self.toggle_theme)
+        right_layout.addWidget(
+            self.theme_btn,
+            alignment=Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop,
+        )
+
+        self.stack = QStackedWidget()
+        right_layout.addWidget(self.stack)
+        self.centralWidget().layout().addWidget(right_widget)
+
+        self.stack.addWidget(create_dashboard_page(self))
+        self.stack.addWidget(create_power_page(self))
+        self.stack.addWidget(create_battery_page(self))
+        self.stack.addWidget(create_actions_page(self))
+        self.stack.addWidget(create_settings_page(self))
+        self.stack.addWidget(create_about_page(self))
+
+    def _build_changes_bar(self, parent_layout):
         self.changes_bar = QFrame()
         self.changes_bar.setObjectName("ChangesBar")
         self.changes_bar.setFixedHeight(50)
@@ -177,41 +205,8 @@ class VantageGUI(QMainWindow):
         btn_revert.clicked.connect(self.revert_all)
         bar_h.addWidget(btn_revert)
 
-        right_layout.addWidget(self.changes_bar)
+        parent_layout.addWidget(self.changes_bar)
 
-        # Theme toggle button
-        self.theme_btn = QPushButton(tr("Light Theme"))
-        self.theme_btn.setObjectName("ThemeBtn")
-        self.theme_btn.setFixedHeight(36)
-        self.theme_btn.clicked.connect(self.toggle_theme)
-        right_layout.addWidget(
-            self.theme_btn,
-            alignment=Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTop,
-        )
-
-        # Stacked pages
-        self.stack = QStackedWidget()
-        right_layout.addWidget(self.stack)
-        main_layout.addWidget(right_widget)
-
-        self.stack.addWidget(create_dashboard_page(self))
-        self.stack.addWidget(create_power_page(self))
-        self.stack.addWidget(create_battery_page(self))
-        self.stack.addWidget(create_actions_page(self))
-        self.stack.addWidget(create_settings_page(self))
-        self.stack.addWidget(create_about_page(self))
-
-        self.switch_tab(0)
-        self._apply_theme(self.current_theme)
-        self.load_state()
-
-        # Sensor timer
-        self.timer = QTimer()
-        self.timer.timeout.connect(self.update_sensors)
-        self.timer.start(2000)
-        self.update_sensors()
-
-    # ── System Tray ────────────────────────────────────────────────────
     def _init_tray(self):
         self.tray_icon = None
         self.tray_enabled = False
@@ -242,7 +237,6 @@ class VantageGUI(QMainWindow):
             self.tray_icon.show()
 
     def _get_icon_path(self):
-        import os
         for p in [
             os.path.join(os.path.dirname(os.path.dirname(__file__)), "icon.png"),
             "/usr/lib/vantage/icon.png",
@@ -290,26 +284,24 @@ class VantageGUI(QMainWindow):
         else:
             event.accept()
 
-    # ── Navigation ────────────────────────────────────────────────────
     def switch_tab(self, idx):
         self.nav_btns[idx].setChecked(True)
         self.stack.setCurrentIndex(idx)
 
-    # ── TDP ───────────────────────────────────────────────────────────
     def _on_tdp_toggle(self, checked):
         for spin in self.tdp_spins:
             spin.setEnabled(checked)
-        self.btn_apply_tdp.setEnabled(checked)
+        if hasattr(self, 'btn_apply_tdp') and self.btn_apply_tdp:
+            self.btn_apply_tdp.setEnabled(checked)
         if checked:
             self._mark_pending()
         else:
             self._clear_pending()
 
     def _on_tdp_spin_change(self):
-        if self.tdp_check.isChecked():
+        if hasattr(self, 'tdp_check') and self.tdp_check.isChecked():
             self._mark_pending()
 
-    # ── Pending changes bar ───────────────────────────────────────────
     def _mark_pending(self):
         self._pending = True
         self.changes_bar.setVisible(True)
@@ -319,7 +311,7 @@ class VantageGUI(QMainWindow):
         self.changes_bar.setVisible(False)
 
     def apply_all(self):
-        if self.tdp_check.isChecked():
+        if hasattr(self, 'tdp_check') and self.tdp_check.isChecked():
             self.apply_tdp()
         self._clear_pending()
         self.statusBar().showMessage(tr("Status all applied"), 3000)
@@ -331,7 +323,6 @@ class VantageGUI(QMainWindow):
         self._clear_pending()
         self.statusBar().showMessage(tr("Status reverted"), 2000)
 
-    # ── Theme ─────────────────────────────────────────────────────────
     def _apply_theme(self, theme: str):
         if theme == "light":
             self.setStyleSheet(LIGHT_STYLESHEET)
@@ -341,30 +332,23 @@ class VantageGUI(QMainWindow):
             self.theme_btn.setText(tr("Light Theme"))
 
     def toggle_theme(self):
-        if self.current_theme == "dark":
-            self.current_theme = "light"
-        else:
-            self.current_theme = "dark"
+        self.current_theme = "light" if self.current_theme == "dark" else "dark"
         self._apply_theme(self.current_theme)
         save_theme(self.current_theme)
 
-    # ── Hardware apply ─────────────────────────────────────────────────
     def auto_apply_change(self):
         sender = self.sender()
         if not sender or not sender.isEnabled():
             return
         if self.svc.limited:
-            QMessageBox.warning(
-                self, tr("Service Error"),
-                tr("Service Error"),
-            )
+            QMessageBox.warning(self, tr("Service Error"), tr("Service Error"))
             return
 
         self.statusBar().showMessage(tr("Status syncing"), 1000)
         errors = []
         try:
             if sender in self.pm_combos:
-                pm = "balanced" if sender.currentText() == "Balance" else sender.currentText().lower()
+                pm = sender.currentText().lower()
                 self.svc.iface.SetPowerMode(pm)
             elif sender in self.bat_combos:
                 self.svc.iface.SetConservation(sender.currentText() == "Conservation")
@@ -394,7 +378,7 @@ class VantageGUI(QMainWindow):
         self.load_state()
 
     def apply_tdp(self):
-        if self.svc.limited:
+        if self.svc.limited or not self.tdp_spins:
             return
         try:
             self.svc.iface.SetRyzenTdp(
@@ -407,11 +391,8 @@ class VantageGUI(QMainWindow):
         except Exception as e:
             QMessageBox.warning(self, tr("TDP Error"), str(e))
 
-    # ── Capability engine ─────────────────────────────────────────────
     def apply_cap(self, widget, cap_dict, partial_warning=""):
-        if not isinstance(cap_dict, dict) or not widget:
-            return
-        if not cap_dict:
+        if not isinstance(cap_dict, dict) or not widget or not cap_dict:
             return
 
         supported = cap_dict.get("supported", False)
@@ -434,7 +415,14 @@ class VantageGUI(QMainWindow):
         else:
             set_row_state(widget, True)
 
-    # ── Load hardware state ───────────────────────────────────────────
+        if widget.objectName() == "SettingsRow" and hasattr(self, 'tdp_grid_w') and widget == self.rows.get('tdp'):
+            if hasattr(self, 'tdp_check'):
+                tdp_on = self.tdp_check.isChecked() and supported
+                for spin in self.tdp_spins:
+                    spin.setEnabled(tdp_on)
+                if hasattr(self, 'btn_apply_tdp') and self.btn_apply_tdp:
+                    self.btn_apply_tdp.setEnabled(tdp_on)
+
     def load_state(self):
         current = self.stack.currentWidget()
         scroll = current.findChild(QScrollArea) if current else None
@@ -483,7 +471,7 @@ class VantageGUI(QMainWindow):
 
         try:
             pm = str(self.svc.iface.GetPowerMode()).lower()
-            _sync(self.pm_combos, "Quiet" if "quiet" in pm else "Performance" if "performance" in pm else "Balance")
+            _sync(self.pm_combos, "Quiet" if "quiet" in pm else "Performance" if "performance" in pm else "Balanced")
         except Exception:
             pass
         try:
@@ -532,7 +520,6 @@ class VantageGUI(QMainWindow):
         if scroll:
             scroll.verticalScrollBar().setValue(scroll_val)
 
-    # ── Sensor updates ────────────────────────────────────────────────
     def update_sensors(self):
         def set_bar_color(pb, val):
             if val < 50:
@@ -541,9 +528,16 @@ class VantageGUI(QMainWindow):
                 color = "#f39c12"
             else:
                 color = "#e74c3c"
-            pb.setStyleSheet(
-                f"QProgressBar::chunk {{ background-color: {color}; border-radius: 4px; }}"
-            )
+            is_zero = val <= 0
+            pb.setProperty("zero", "true" if is_zero else "false")
+            pb.style().unpolish(pb)
+            pb.style().polish(pb)
+            if not is_zero:
+                pb.setStyleSheet(
+                    f"QProgressBar::chunk {{ background-color: {color}; border-radius: 4px; }}"
+                )
+            else:
+                pb.setStyleSheet("")
 
         if not self.svc.limited:
             try:
@@ -562,9 +556,9 @@ class VantageGUI(QMainWindow):
                 set_bar_color(self.pb_cput, int(cpu))
                 self.lbl_cpu_temp.setText(f"{cpu:.1f} °C")
 
-                fan_pct = int(fan / 50 if fan > 0 else 0)
+                fan_pct = min(fan, 5000)
                 self.pb_cpuf.setValue(fan_pct)
-                set_bar_color(self.pb_cpuf, fan_pct)
+                set_bar_color(self.pb_cpuf, int(fan_pct / 50))
                 self.lbl_cpu_fan.setText(f"{fan} RPM" if fan > 0 else "Idle")
 
                 self.pb_gpu.setValue(int(gpu_util))
@@ -577,7 +571,7 @@ class VantageGUI(QMainWindow):
 
                 if hasattr(self, 'pb_gpuf'):
                     self.pb_gpuf.setValue(fan_pct)
-                    set_bar_color(self.pb_gpuf, fan_pct)
+                    set_bar_color(self.pb_gpuf, int(fan_pct / 50))
                     self.lbl_gpu_fan.setText(f"{fan} RPM" if fan > 0 else "Idle")
             except Exception:
                 pass
