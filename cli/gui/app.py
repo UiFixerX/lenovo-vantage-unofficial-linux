@@ -12,6 +12,7 @@ if _CLI_DIR not in sys.path:
 
 from PyQt6.QtWidgets import QApplication, QMessageBox, QDialog
 from PyQt6.QtGui import QIcon
+from PyQt6.QtCore import QLockFile, QStandardPaths
 
 from i18n import (
     tr, load_locale, save_locale, set_locale,
@@ -35,6 +36,15 @@ def main():
     if os.path.exists(icon_path):
         app.setWindowIcon(QIcon(icon_path))
 
+    # ── Single-instance lock ───────────────────────────────────────
+    tmp_dir = QStandardPaths.writableLocation(QStandardPaths.StandardLocation.TempLocation)
+    lock_path = os.path.join(tmp_dir, f"vantage-gui-{os.getuid()}.lock")
+    lock = QLockFile(lock_path)
+    lock.setStaleLockTime(0)
+    if not lock.tryLock(100):
+        # Another instance is already running — nothing to do, just exit.
+        sys.exit(0)
+
     # ── First-run language selection ───────────────────────────────
     if is_first_run():
         detected = detect_system_theme()
@@ -57,7 +67,3 @@ def main():
     gui = VantageGUI(svc)
     gui.show()
     sys.exit(app.exec())
-
-
-if __name__ == "__main__":
-    main()

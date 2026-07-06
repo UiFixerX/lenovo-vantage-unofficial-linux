@@ -257,6 +257,7 @@ class VantageGUI(QMainWindow):
             self._tray_show()
 
     def _tray_show(self):
+        self.setWindowState(self.windowState() & ~Qt.WindowState.WindowMinimized)
         self.show()
         self.raise_()
         self.activateWindow()
