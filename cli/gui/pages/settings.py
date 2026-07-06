@@ -1,6 +1,6 @@
 """Settings page — language, theme, tray, autorun, boot logo."""
 
-from PyQt6.QtWidgets import QComboBox, QLabel, QMessageBox, QCheckBox
+from PyQt6.QtWidgets import QComboBox, QLabel, QCheckBox, QApplication
 from PyQt6.QtCore import Qt
 
 from i18n import (
@@ -93,7 +93,8 @@ def _on_language_changed(gui, index):
         return
 
     subprocess.Popen([sys.executable, script])
-    os._exit(0)
+    QApplication.quit()
+    sys.exit(0)
 
 
 def _on_theme_changed(gui, index):

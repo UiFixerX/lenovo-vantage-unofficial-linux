@@ -10,7 +10,7 @@ def create_actions_page(gui):
     page, layout = create_scroll_page(tr("Actions & Automation"))
 
     lbl_info = QLabel(tr("Actions info"))
-    lbl_info.setStyleSheet("color: #aaaaaa; margin-bottom: 10px;")
+    lbl_info.setObjectName("InfoLabel")
     layout.addWidget(lbl_info)
 
     mt = QComboBox()

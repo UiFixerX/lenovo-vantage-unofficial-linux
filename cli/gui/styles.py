@@ -22,6 +22,13 @@ QWidget#Sidebar {
     background-color: #181818;
     border-right: 1px solid #222222;
 }
+QLabel#SidebarTitle {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-left: 15px;
+    margin-bottom: 20px;
+}
 QPushButton.SidebarBtn {
     background-color: transparent;
     color: #9e9e9e;
@@ -153,6 +160,15 @@ QLabel#PageTitle {
     font-size: 26px;
     font-weight: bold;
     color: #ffffff;
+    margin-bottom: 10px;
+}
+QLabel#AboutTitle {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+}
+QLabel#InfoLabel {
+    color: #aaaaaa;
     margin-bottom: 10px;
 }
 QComboBox, QSpinBox {
@@ -367,6 +383,13 @@ QWidget#Sidebar {
     background-color: #ececec;
     border-right: 1px solid #d0d0d0;
 }
+QLabel#SidebarTitle {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1a1a1a;
+    margin-left: 15px;
+    margin-bottom: 20px;
+}
 QPushButton.SidebarBtn {
     background-color: transparent;
     color: #555555;
@@ -498,6 +521,15 @@ QLabel#PageTitle {
     font-size: 26px;
     font-weight: bold;
     color: #1a1a1a;
+    margin-bottom: 10px;
+}
+QLabel#AboutTitle {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1a1a1a;
+}
+QLabel#InfoLabel {
+    color: #666666;
     margin-bottom: 10px;
 }
 QComboBox, QSpinBox {

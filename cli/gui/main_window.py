@@ -118,10 +118,7 @@ class VantageGUI(QMainWindow):
         side_layout.setSpacing(5)
 
         title_lbl = QLabel(" Vantage")
-        title_lbl.setStyleSheet(
-            "font-size: 18px; font-weight: bold; color: white; "
-            "margin-left: 15px; margin-bottom: 20px;"
-        )
+        title_lbl.setObjectName("SidebarTitle")
         side_layout.addWidget(title_lbl)
 
         self.nav_btns = []

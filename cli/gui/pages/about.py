@@ -16,7 +16,7 @@ def create_about_page(gui):
     v.setSpacing(10)
 
     title = QLabel(tr("About app title"))
-    title.setStyleSheet("font-size: 20px; font-weight: bold; color: white;")
+    title.setObjectName("AboutTitle")
     v.addWidget(title)
 
     v.addWidget(QLabel(tr("About app desc")))
