@@ -26,7 +26,10 @@ def get_battery_info():
         "percent": "N/A", "status": "N/A", "health": "N/A",
         "cycles": "N/A", "current": "N/A", "full": "N/A", "design": "N/A",
     }
-    for bat in os.listdir("/sys/class/power_supply/"):
+    psu_root = "/sys/class/power_supply"
+    if not os.path.isdir(psu_root):
+        return info
+    for bat in os.listdir(psu_root):
         if bat.startswith("BAT"):
             path = f"/sys/class/power_supply/{bat}"
             try:
@@ -71,6 +74,9 @@ class VantageGUI(QMainWindow):
         # If service is in limited mode, show a warning
         if svc.limited:
             self.statusBar().showMessage(tr("Service Error"), 0)
+
+        # ── System Tray (initialised early so pages can read tray_available) ──
+        self._init_tray()
 
         # ── UI tracking ───────────────────────────────────────────────
         self.pm_combos = []
@@ -199,9 +205,6 @@ class VantageGUI(QMainWindow):
         self._apply_theme(self.current_theme)
         self.load_state()
 
-        # ── System Tray ───────────────────────────────────────────────
-        self._init_tray()
-
         # Sensor timer
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_sensors)
@@ -254,6 +257,7 @@ class VantageGUI(QMainWindow):
             self._tray_show()
 
     def _tray_show(self):
+        self.setWindowState(self.windowState() & ~Qt.WindowState.WindowMinimized)
         self.show()
         self.raise_()
         self.activateWindow()
@@ -467,7 +471,7 @@ class VantageGUI(QMainWindow):
             self.apply_cap(self.rows.get('fan_dash'), caps.get("fan", {}))
             self.apply_cap(self.rows.get('fan_main'), caps.get("fan", {}))
 
-            self.apply_cap(self.rows.get('tdp'), caps.get("ryzenadj", {}), "Missing ryzenadj binary.")
+            self.apply_cap(self.rows.get('tdp'), caps.get("overclock", {}), "Missing ryzenadj binary.")
         except Exception:
             pass
 
