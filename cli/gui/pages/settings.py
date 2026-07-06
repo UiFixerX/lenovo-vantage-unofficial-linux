@@ -80,16 +80,29 @@ def _on_language_changed(gui, index):
     if index == 2:
         save_locale("ru")
         set_locale("ru")
-    else:
+    elif index == 1:
         save_locale("en")
         set_locale("en")
-    QMessageBox.information(gui, tr("Language"), tr("Language subtitle"))
-    import sys, subprocess
-    subprocess.Popen([sys.executable] + sys.argv)
-    gui.close()
+    else:
+        return
+
+    import sys, os, subprocess
+
+    script = os.path.abspath(sys.argv[0]) if sys.argv[0] else None
+    if not script or not os.path.exists(script):
+        return
+
+    subprocess.Popen([sys.executable, script])
+    os._exit(0)
 
 
 def _on_theme_changed(gui, index):
-    gui.current_theme = "light" if index == 1 else "dark"
+    if index == 1:
+        gui.current_theme = "light"
+    elif index == 0:
+        gui.current_theme = "dark"
+    else:
+        from gui.styles import detect_system_theme
+        gui.current_theme = detect_system_theme()
     gui._apply_theme(gui.current_theme)
     save_theme(gui.current_theme)

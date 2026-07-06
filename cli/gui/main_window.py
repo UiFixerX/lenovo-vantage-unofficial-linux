@@ -294,14 +294,15 @@ class VantageGUI(QMainWindow):
     def _on_tdp_toggle(self, checked):
         for spin in self.tdp_spins:
             spin.setEnabled(checked)
-        self.btn_apply_tdp.setEnabled(checked)
+        if hasattr(self, 'btn_apply_tdp') and self.btn_apply_tdp:
+            self.btn_apply_tdp.setEnabled(checked)
         if checked:
             self._mark_pending()
         else:
             self._clear_pending()
 
     def _on_tdp_spin_change(self):
-        if self.tdp_check.isChecked():
+        if hasattr(self, 'tdp_check') and self.tdp_check.isChecked():
             self._mark_pending()
 
     def _mark_pending(self):
@@ -313,7 +314,7 @@ class VantageGUI(QMainWindow):
         self.changes_bar.setVisible(False)
 
     def apply_all(self):
-        if self.tdp_check.isChecked():
+        if hasattr(self, 'tdp_check') and self.tdp_check.isChecked():
             self.apply_tdp()
         self._clear_pending()
         self.statusBar().showMessage(tr("Status all applied"), 3000)
@@ -380,7 +381,7 @@ class VantageGUI(QMainWindow):
         self.load_state()
 
     def apply_tdp(self):
-        if self.svc.limited:
+        if self.svc.limited or not self.tdp_spins:
             return
         try:
             self.svc.iface.SetRyzenTdp(
@@ -416,6 +417,14 @@ class VantageGUI(QMainWindow):
                 sub_lbl.setText(sub_lbl.text() + f" ({partial_warning})")
         else:
             set_row_state(widget, True)
+
+        if widget.objectName() == "SettingsRow" and hasattr(self, 'tdp_grid_w') and widget == self.rows.get('tdp'):
+            if hasattr(self, 'tdp_check'):
+                tdp_on = self.tdp_check.isChecked() and supported
+                for spin in self.tdp_spins:
+                    spin.setEnabled(tdp_on)
+                if hasattr(self, 'btn_apply_tdp') and self.btn_apply_tdp:
+                    self.btn_apply_tdp.setEnabled(tdp_on)
 
     def load_state(self):
         current = self.stack.currentWidget()
@@ -526,9 +535,12 @@ class VantageGUI(QMainWindow):
             pb.setProperty("zero", "true" if is_zero else "false")
             pb.style().unpolish(pb)
             pb.style().polish(pb)
-            pb.setStyleSheet(
-                f"QProgressBar::chunk {{ background-color: {color}; border-radius: 4px; }}"
-            )
+            if not is_zero:
+                pb.setStyleSheet(
+                    f"QProgressBar::chunk {{ background-color: {color}; border-radius: 4px; }}"
+                )
+            else:
+                pb.setStyleSheet("")
 
         if not self.svc.limited:
             try:

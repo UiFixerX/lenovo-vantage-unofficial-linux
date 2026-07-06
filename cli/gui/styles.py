@@ -49,6 +49,26 @@ QFrame#SidebarDivider {
     max-height: 1px;
     margin: 6px 14px;
 }
+QMenu {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #333333;
+    border-radius: 4px;
+    padding: 6px;
+}
+QMenu::item {
+    padding: 6px 24px;
+    border-radius: 4px;
+}
+QMenu::item:selected {
+    background-color: #0078d4;
+    color: #ffffff;
+}
+QMenu::separator {
+    height: 1px;
+    background-color: #333333;
+    margin: 4px 8px;
+}
 QFrame#DashboardCard {
     background-color: #1e1e1e;
     border: 1px solid #2a2a2a;
@@ -214,11 +234,12 @@ QComboBox QAbstractItemView {
     background-color: #1e1e1e;
     color: #ffffff;
     border: 1px solid #333333;
-    border-radius: 4px;
+    border-radius: 0px;
     selection-background-color: #0078d4;
     selection-color: #ffffff;
     outline: none;
-    padding: 2px;
+    padding: 4px;
+    margin: 0px;
 }
 QComboBox QAbstractItemView::item {
     min-height: 28px;
@@ -233,6 +254,16 @@ QComboBox QAbstractItemView::item:hover {
 QComboBox QAbstractItemView::item:selected {
     background-color: #0078d4;
     color: #ffffff;
+}
+QComboBox QFrame {
+    background-color: #1e1e1e;
+    border: none;
+    margin: 0px;
+}
+QAbstractItemView {
+    background-color: #1e1e1e;
+    border: none;
+    margin: 0px;
 }
 QScrollBar:vertical {
     border: none;
@@ -362,6 +393,26 @@ QFrame#SidebarDivider {
     background-color: #cccccc;
     max-height: 1px;
     margin: 6px 14px;
+}
+QMenu {
+    background-color: #ffffff;
+    color: #1a1a1a;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 6px;
+}
+QMenu::item {
+    padding: 6px 24px;
+    border-radius: 4px;
+}
+QMenu::item:selected {
+    background-color: #0078d4;
+    color: #ffffff;
+}
+QMenu::separator {
+    height: 1px;
+    background-color: #cccccc;
+    margin: 4px 8px;
 }
 QFrame#DashboardCard {
     background-color: #ffffff;
@@ -528,11 +579,12 @@ QComboBox QAbstractItemView {
     background-color: #ffffff;
     color: #1a1a1a;
     border: 1px solid #cccccc;
-    border-radius: 4px;
+    border-radius: 0px;
     selection-background-color: #0078d4;
     selection-color: #ffffff;
     outline: none;
-    padding: 2px;
+    padding: 4px;
+    margin: 0px;
 }
 QComboBox QAbstractItemView::item {
     min-height: 28px;
@@ -547,6 +599,16 @@ QComboBox QAbstractItemView::item:hover {
 QComboBox QAbstractItemView::item:selected {
     background-color: #0078d4;
     color: #ffffff;
+}
+QComboBox QFrame {
+    background-color: #ffffff;
+    border: none;
+    margin: 0px;
+}
+QAbstractItemView {
+    background-color: #ffffff;
+    border: none;
+    margin: 0px;
 }
 QScrollBar:vertical {
     border: none;
