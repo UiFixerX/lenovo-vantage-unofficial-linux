@@ -348,7 +348,7 @@ class VantageGUI(QMainWindow):
         errors = []
         try:
             if sender in self.pm_combos:
-                pm = "balanced" if sender.currentText() == "Balance" else sender.currentText().lower()
+                pm = sender.currentText().lower()
                 self.svc.iface.SetPowerMode(pm)
             elif sender in self.bat_combos:
                 self.svc.iface.SetConservation(sender.currentText() == "Conservation")
@@ -471,7 +471,7 @@ class VantageGUI(QMainWindow):
 
         try:
             pm = str(self.svc.iface.GetPowerMode()).lower()
-            _sync(self.pm_combos, "Quiet" if "quiet" in pm else "Performance" if "performance" in pm else "Balance")
+            _sync(self.pm_combos, "Quiet" if "quiet" in pm else "Performance" if "performance" in pm else "Balanced")
         except Exception:
             pass
         try:
@@ -556,9 +556,9 @@ class VantageGUI(QMainWindow):
                 set_bar_color(self.pb_cput, int(cpu))
                 self.lbl_cpu_temp.setText(f"{cpu:.1f} °C")
 
-                fan_pct = int(fan / 50 if fan > 0 else 0)
+                fan_pct = min(fan, 5000)
                 self.pb_cpuf.setValue(fan_pct)
-                set_bar_color(self.pb_cpuf, fan_pct)
+                set_bar_color(self.pb_cpuf, int(fan_pct / 50))
                 self.lbl_cpu_fan.setText(f"{fan} RPM" if fan > 0 else "Idle")
 
                 self.pb_gpu.setValue(int(gpu_util))
@@ -571,7 +571,7 @@ class VantageGUI(QMainWindow):
 
                 if hasattr(self, 'pb_gpuf'):
                     self.pb_gpuf.setValue(fan_pct)
-                    set_bar_color(self.pb_gpuf, fan_pct)
+                    set_bar_color(self.pb_gpuf, int(fan_pct / 50))
                     self.lbl_gpu_fan.setText(f"{fan} RPM" if fan > 0 else "Idle")
             except Exception:
                 pass

@@ -29,7 +29,7 @@ def _build_power_section(gui, layout):
     layout.addWidget(lbl)
 
     pm = QComboBox()
-    pm.addItems(["Quiet", "Balance", "Performance"])
+    pm.addItems(["Quiet", "Balanced", "Performance"])
     gui.pm_combos.append(pm)
     pm.currentIndexChanged.connect(gui.auto_apply_change)
     gui.rows['power_main'] = create_row(

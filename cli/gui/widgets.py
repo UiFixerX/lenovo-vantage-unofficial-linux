@@ -11,7 +11,7 @@ from PyQt6.QtCore import Qt
 
 def make_info_icon(tooltip_text):
     lbl = QLabel("ⓘ")
-    lbl.setStyleSheet("color: #888888; font-size: 16px; font-weight: bold;")
+    lbl.setObjectName("InfoIcon")
     lbl.setToolTip(tooltip_text)
     lbl.setCursor(QCursor(Qt.CursorShape.WhatsThisCursor))
     return lbl

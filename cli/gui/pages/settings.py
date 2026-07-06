@@ -38,7 +38,12 @@ def _build_general_section(gui, layout):
 
     theme = QComboBox()
     theme.addItems([tr("Dark Theme"), tr("Light Theme"), tr("System Default")])
-    theme.setCurrentIndex(1 if gui.current_theme == "light" else 0)
+    if gui.current_theme == "light":
+        theme.setCurrentIndex(1)
+    elif gui.current_theme == "dark":
+        theme.setCurrentIndex(0)
+    else:
+        theme.setCurrentIndex(2)
     theme.currentIndexChanged.connect(lambda idx: _on_theme_changed(gui, idx))
     layout.addWidget(create_row(tr("Theme"), tr("Theme subtitle"), theme))
 

@@ -171,6 +171,21 @@ QLabel#InfoLabel {
     color: #aaaaaa;
     margin-bottom: 10px;
 }
+QLabel#InfoIcon {
+    color: #888888;
+    font-size: 16px;
+    font-weight: bold;
+}
+QLabel#DialogLabel {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+QLabel#DialogLabel {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+}
 QComboBox, QSpinBox {
     background-color: #0078d4;
     border: 1px solid #005a9e;
@@ -531,6 +546,11 @@ QLabel#AboutTitle {
 QLabel#InfoLabel {
     color: #666666;
     margin-bottom: 10px;
+}
+QLabel#InfoIcon {
+    color: #888888;
+    font-size: 16px;
+    font-weight: bold;
 }
 QComboBox, QSpinBox {
     background-color: #0078d4;

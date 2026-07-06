@@ -24,12 +24,12 @@ def detect_capabilities() -> dict:
 def set_fn_lock(enabled: bool) -> None:
     vpc = get_vpc_path()
     if vpc and Path(f"{vpc}/fn_lock").exists():
-        Path(f"{vpc}/fn_lock").write_text("0" if enabled else "1")
+        Path(f"{vpc}/fn_lock").write_text("1" if enabled else "0")
 
 
 def get_fn_lock() -> bool:
     vpc = get_vpc_path()
-    return Path(f"{vpc}/fn_lock").read_text().strip() == "0" if vpc and Path(f"{vpc}/fn_lock").exists() else False
+    return Path(f"{vpc}/fn_lock").read_text().strip() == "1" if vpc and Path(f"{vpc}/fn_lock").exists() else False
 
 
 def set_flip_to_start(enabled: bool) -> None:

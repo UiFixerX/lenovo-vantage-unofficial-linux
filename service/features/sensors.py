@@ -42,11 +42,27 @@ def get_gpu_temp() -> float:
 
 def get_cpu_usage() -> float:
     try:
-        with open('/proc/loadavg', 'r') as fl:
-            load1 = float(fl.read().split()[0])
-        num_cores = os.cpu_count() or 1
-        usage = (load1 / num_cores) * 100.0
-        return min(100.0, usage)
+        with open('/proc/stat', 'r') as f:
+            line1 = f.readline()
+        import time
+        time.sleep(0.1)
+        with open('/proc/stat', 'r') as f:
+            line2 = f.readline()
+
+        def parse(line):
+            parts = line.split()[1:]
+            vals = [int(x) for x in parts[:4]]
+            idle = vals[3]
+            total = sum(vals)
+            return idle, total
+
+        idle1, total1 = parse(line1)
+        idle2, total2 = parse(line2)
+        total_diff = total2 - total1
+        idle_diff = idle2 - idle1
+        if total_diff == 0:
+            return 0.0
+        return min(100.0, (1.0 - idle_diff / total_diff) * 100.0)
     except Exception:
         return 0.0
 
